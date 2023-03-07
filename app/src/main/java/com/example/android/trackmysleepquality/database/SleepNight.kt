@@ -16,4 +16,19 @@
 
 package com.example.android.trackmysleepquality.database
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.ColumnInfo
+
 // TODO (01) Create the SleepNight class.
+@Entity(tableName = "sleep_night")
+data class SleepNight(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0L,
+    @ColumnInfo(name = "start_time_milli")
+    val startTimeMilli: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "end_time_milli")
+    val endTimeMilli: Long = startTimeMilli,
+    @ColumnInfo(name = "sleep_rating")
+    val sleepQuality: Int = -1
+)
