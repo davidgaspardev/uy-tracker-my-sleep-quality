@@ -45,4 +45,7 @@ interface SleepDatabaseDao {
 
     @Query("DELETE FROM sleep_night")
     fun clear()
+
+    @Query("SELECT COUNT(*) FROM sleep_night")
+    fun getCount(): Long
 }
