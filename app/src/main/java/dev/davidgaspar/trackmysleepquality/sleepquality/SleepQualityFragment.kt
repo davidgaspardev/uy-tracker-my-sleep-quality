@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleepquality
+package dev.davidgaspar.trackmysleepquality.sleepquality
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,8 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
+import dev.davidgaspar.trackmysleepquality.R
+import dev.davidgaspar.trackmysleepquality.databinding.FragmentSleepQualityBinding
 
 /**
  * Fragment that displays a list of clickable icons,

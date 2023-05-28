@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleeptracker
+package dev.davidgaspar.trackmysleepquality.sleeptracker
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,9 +23,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.database.SleepDatabase
-import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import dev.davidgaspar.trackmysleepquality.R
+import dev.davidgaspar.trackmysleepquality.database.SleepDatabase
+import dev.davidgaspar.trackmysleepquality.databinding.FragmentSleepTrackerBinding
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
