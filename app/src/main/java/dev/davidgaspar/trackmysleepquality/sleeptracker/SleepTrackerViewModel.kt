@@ -19,13 +19,94 @@ package dev.davidgaspar.trackmysleepquality.sleeptracker
 import android.app.Application
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import dev.davidgaspar.trackmysleepquality.database.SleepDatabaseDao
+import dev.davidgaspar.trackmysleepquality.database.SleepNight
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * ViewModel for SleepTrackerFragment.
  */
 class SleepTrackerViewModel(
-        val database: SleepDatabaseDao,
-        application: Application) : AndroidViewModel(application) {
+		val database: SleepDatabaseDao,
+		application: Application) : AndroidViewModel(application) {
+
+	// With this object (Job form kotlinx) I can cancel all coroutine in this scope.
+	private var viewModelJob = Job()
+	private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+	private val tonight = MutableLiveData<SleepNight?>()
+	private val nights = database.getAll()
+
+	init {
+		initializeTonight()
+	}
+
+	private fun initializeTonight() {
+		uiScope.launch {
+			tonight.value = getTonightFromDatabase()
+		}
+	}
+
+	private suspend fun getTonightFromDatabase(): SleepNight? {
+		return withContext(Dispatchers.IO) {
+			var night = database.getTonight()
+			if (night?.endTimeMilli != night?.startTimeMilli) {
+				night = null
+			}
+
+			night
+		}
+	}
+
+	fun onStartTracking() {
+		uiScope.launch {
+			val newNight = SleepNight()
+			recordNight(newNight)
+			tonight.value = getTonightFromDatabase()
+		}
+	}
+
+	private suspend fun recordNight(night: SleepNight) {
+		withContext(Dispatchers.IO) {
+			database.add(night)
+		}
+	}
+
+	fun onStopTracking() {
+		uiScope.launch {
+			val oldNight  = tonight.value ?: return@launch
+			oldNight.endTimeMilli = System.currentTimeMillis()
+			updateNight(oldNight)
+		}
+	}
+
+	private suspend fun updateNight(night: SleepNight) {
+		withContext(Dispatchers.IO) {
+			database.update(night)
+		}
+	}
+
+	override fun onCleared() {
+		super.onCleared()
+		this.viewModelJob.cancel()
+	}
+
+	fun onClear() {
+		uiScope.launch {
+			clear()
+			tonight.value = null
+		}
+	}
+
+	private suspend fun clear() {
+		withContext(Dispatchers.IO) {
+			database.clear()
+		}
+	}
 }
 
