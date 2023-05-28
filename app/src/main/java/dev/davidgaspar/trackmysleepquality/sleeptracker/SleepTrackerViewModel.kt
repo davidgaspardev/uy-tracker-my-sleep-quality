@@ -24,12 +24,8 @@ import androidx.lifecycle.Transformations
 import dev.davidgaspar.trackmysleepquality.database.SleepDatabaseDao
 import dev.davidgaspar.trackmysleepquality.database.SleepNight
 import dev.davidgaspar.trackmysleepquality.formatNights
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * ViewModel for SleepTrackerFragment.
@@ -38,9 +34,6 @@ class SleepTrackerViewModel(
 		val database: SleepDatabaseDao,
 		application: Application) : AndroidViewModel(application) {
 
-	// With this object (Job form kotlinx) I can cancel all coroutine in this scope.
-	private var viewModelJob = Job()
-	private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 	private val tonight = MutableLiveData<SleepNight?>()
 	private val nights = database.getAll()
 
@@ -53,24 +46,22 @@ class SleepTrackerViewModel(
 	}
 
 	private fun initializeTonight() {
-		uiScope.launch {
+		viewModelScope.launch {
 			tonight.value = getTonightFromDatabase()
 		}
 	}
 
 	private suspend fun getTonightFromDatabase(): SleepNight? {
-		return withContext(Dispatchers.IO) {
-			var night = database.getTonight()
-			if (night?.endTimeMilli != night?.startTimeMilli) {
-				night = null
-			}
-
-			night
+		var night = database.getTonight()
+		if (night?.endTimeMilli != night?.startTimeMilli) {
+			night = null
 		}
+
+		return night
 	}
 
 	fun onStartTracking() {
-		uiScope.launch {
+		viewModelScope.launch {
 			val newNight = SleepNight()
 			recordNight(newNight)
 			tonight.value = getTonightFromDatabase()
@@ -78,13 +69,11 @@ class SleepTrackerViewModel(
 	}
 
 	private suspend fun recordNight(night: SleepNight) {
-		withContext(Dispatchers.IO) {
-			database.add(night)
-		}
+		database.add(night)
 	}
 
 	fun onStopTracking() {
-		uiScope.launch {
+		viewModelScope.launch {
 			val oldNight  = tonight.value ?: return@launch
 			oldNight.endTimeMilli = System.currentTimeMillis()
 			updateNight(oldNight)
@@ -92,27 +81,18 @@ class SleepTrackerViewModel(
 	}
 
 	private suspend fun updateNight(night: SleepNight) {
-		withContext(Dispatchers.IO) {
-			database.update(night)
-		}
-	}
-
-	override fun onCleared() {
-		super.onCleared()
-		this.viewModelJob.cancel()
+		database.update(night)
 	}
 
 	fun onClear() {
-		uiScope.launch {
+		viewModelScope.launch {
 			clear()
 			tonight.value = null
 		}
 	}
 
 	private suspend fun clear() {
-		withContext(Dispatchers.IO) {
-			database.clear()
-		}
+		database.clear()
 	}
 }
 
