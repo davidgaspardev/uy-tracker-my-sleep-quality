@@ -24,8 +24,9 @@ import androidx.lifecycle.Transformations
 import dev.davidgaspar.trackmysleepquality.database.SleepDatabaseDao
 import dev.davidgaspar.trackmysleepquality.database.SleepNight
 import dev.davidgaspar.trackmysleepquality.formatNights
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * ViewModel for SleepTrackerFragment.
@@ -51,13 +52,13 @@ class SleepTrackerViewModel(
 		}
 	}
 
-	private suspend fun getTonightFromDatabase(): SleepNight? {
+	private suspend fun getTonightFromDatabase(): SleepNight? = withContext(Dispatchers.IO) {
 		var night = database.getTonight()
 		if (night?.endTimeMilli != night?.startTimeMilli) {
 			night = null
 		}
 
-		return night
+		night
 	}
 
 	fun onStartTracking() {
@@ -68,7 +69,7 @@ class SleepTrackerViewModel(
 		}
 	}
 
-	private suspend fun recordNight(night: SleepNight) {
+	private suspend fun recordNight(night: SleepNight) = withContext(Dispatchers.IO)  {
 		database.add(night)
 	}
 
@@ -80,7 +81,7 @@ class SleepTrackerViewModel(
 		}
 	}
 
-	private suspend fun updateNight(night: SleepNight) {
+	private suspend fun updateNight(night: SleepNight) = withContext(Dispatchers.IO) {
 		database.update(night)
 	}
 
@@ -91,7 +92,7 @@ class SleepTrackerViewModel(
 		}
 	}
 
-	private suspend fun clear() {
+	private suspend fun clear() = withContext(Dispatchers.IO) {
 		database.clear()
 	}
 }
