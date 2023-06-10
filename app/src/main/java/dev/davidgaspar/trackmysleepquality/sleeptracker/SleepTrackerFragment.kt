@@ -59,12 +59,12 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = sleepTrackerViewModel
         binding.lifecycleOwner = this
 
-        sleepTrackerViewModel.navigateToSleepQuality.observe(viewLifecycleOwner, Observer {
+        sleepTrackerViewModel.navigateToSleepQuality.observe(viewLifecycleOwner) {
             it?.let {
                 this.findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(it.id))
                 sleepTrackerViewModel.doneNavigation()
             }
-        })
+        }
 
         sleepTrackerViewModel.showSnakBarEvent.observe(viewLifecycleOwner) {
             if (it == true) {

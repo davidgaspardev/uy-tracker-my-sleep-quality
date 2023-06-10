@@ -63,12 +63,12 @@ class SleepQualityFragment : Fragment() {
 
         binding.sleepQualityViewModel = sleepQualityViewModel
 
-        sleepQualityViewModel.navigateToSleepTracker.observe(viewLifecycleOwner, Observer {
+        sleepQualityViewModel.navigateToSleepTracker.observe(viewLifecycleOwner) {
             if (it == true) {
                 findNavController().navigate(SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
                 sleepQualityViewModel.doneNavigating()
             }
-        })
+        }
 
         return binding.root
     }
