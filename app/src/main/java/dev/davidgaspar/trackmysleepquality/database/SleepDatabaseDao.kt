@@ -29,7 +29,7 @@ interface SleepDatabaseDao {
     fun add(night: SleepNight)
 
     @Query("SELECT * FROM sleep_night WHERE id = :id")
-    fun getById(id: Long): SleepNight
+    fun getById(id: Long): SleepNight?
 
     @Query("SELECT * FROM sleep_night ORDER BY id DESC")
     fun getAll(): LiveData<List<SleepNight>>
