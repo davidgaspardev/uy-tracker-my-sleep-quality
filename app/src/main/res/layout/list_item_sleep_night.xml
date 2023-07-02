@@ -17,43 +17,28 @@
             android:id="@+id/quality_image"
             android:layout_width="64dp"
             android:layout_height="60dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/quality_string"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_sleep_5"
             app:sleepImage="@{sleep}"
-            tools:srcCompat="@drawable/ic_sleep_5" />
-
-        <TextView
-            android:id="@+id/sleep_length"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/quality_image"
-            app:layout_constraintTop_toTopOf="parent"
-            app:sleepDurationFormatted="@{sleep}"
-            tools:text="Wednesday" />
+            tools:srcCompat="@drawable/ic_sleep_5"
+            android:contentDescription="@string/ic_content_description" />
 
         <TextView
             android:id="@+id/quality_string"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:text="TextView"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/quality_image"
+            app:layout_constraintStart_toStartOf="@id/quality_image"
+            app:layout_constraintEnd_toEndOf="@id/quality_image"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/quality_image"
-            app:layout_constraintTop_toBottomOf="@+id/sleep_length"
             app:sleepQualityString="@{sleep}"
             tools:text="Excellent!!!" />
     </androidx.constraintlayout.widget.ConstraintLayout>
